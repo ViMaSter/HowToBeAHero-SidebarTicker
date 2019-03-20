@@ -1,0 +1,8 @@
+{
+	"@metadata": {
+		"authors": [
+			"Vincent Mahnke"
+		]
+	},
+	"headerticker-desc": "Adds a News-Ticker to the Header of each wiki-page."
+}

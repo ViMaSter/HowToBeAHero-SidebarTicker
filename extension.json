@@ -1,0 +1,25 @@
+{
+	"name": "Header Ticker",
+	"version": "0.1.1",
+	"author": [
+		"Vincent Mahnke"
+	],
+	"url": "https://github.com/ViMaSter/HowToBeAHero-HeaderTicker",
+	"descriptionmsg": "headerticker-desc",
+	"license-name": "GPL-3.0-or-later",
+	"type": "other",
+	"Hooks": {
+		"SkinTemplateOutputPageBeforeExec": [
+			"HeaderTicker\\Hooks::onSkinTemplateOutputPageBeforeExec"
+		]
+	},
+	"MessagesDirs": {
+		"PDFParser": [
+			"i18n"
+		]
+	},
+	"AutoloadClasses": {
+		"HeaderTicker\\Hooks": "HeaderTicker.Hooks.class.php"
+	},
+	"manifest_version": 1
+}
