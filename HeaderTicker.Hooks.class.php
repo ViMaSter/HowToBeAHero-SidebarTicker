@@ -10,34 +10,34 @@ namespace HeaderTicker {
 			$wgContLang->findVariantLink( $titletext, $title, true );
 			if ( $title )
 			{
-					if ( $title->getNamespace() === NS_SPECIAL )
+				if ( $title->getNamespace() === NS_SPECIAL )
+				{
+					return \SpecialPageFactory::exists( $title->getDBkey() ) ? true : false;
+				}
+				elseif ( $title->isExternal() )
+				{
+					return false;
+				}
+				else
+				{
+					$pdbk = $title->getPrefixedDBkey();
+					$lc = \LinkCache::singleton();
+					$id = $lc->getGoodLinkID( $pdbk );
+					if ( $id !== 0 )
 					{
-						return \SpecialPageFactory::exists( $title->getDBkey() ) ? true : false;
+						return true;
 					}
-					elseif ( $title->isExternal() )
+					elseif ( $lc->isBadLink( $pdbk ) )
 					{
 						return false;
 					}
-					else
-					{
-						$pdbk = $title->getPrefixedDBkey();
-						$lc = \LinkCache::singleton();
-						$id = $lc->getGoodLinkID( $pdbk );
-						if ( $id !== 0 )
-						{
-							return true;
-						}
-						elseif ( $lc->isBadLink( $pdbk ) )
-						{
-							return false;
-						}
-						$id = $title->getArticleID();
+					$id = $title->getArticleID();
 
-						if ( $title->exists() )
-						{
-							return true;
-						}
+					if ( $title->exists() )
+					{
+						return true;
 					}
+				}
 			}
 			return false;
 		}
@@ -60,7 +60,7 @@ namespace HeaderTicker {
 				'action' => 'parse',
 				'page' => $tickerTitle
 			) );
-			
+
 			$context = new \DerivativeContext( new \RequestContext() );
 			$context->setRequest( $apiRequest );
 			$api = new \ApiMain( $context, true );
@@ -70,90 +70,92 @@ namespace HeaderTicker {
 			$wgParser = $backupParser;
 
 			ob_start();
-?>
-<style type="text/css">
-.marqueeContainer
-{
-    position: relative;
+		?>
+			<style type="text/css">
+			.marqueeContainer
+			{
+				position: relative;
 
-    width: calc(100% - 1105px);
-    height: 2.9em;
-    
-    margin-top: 2.1em;
-    float:right;
-    overflow: hidden;
-}
+				width: calc(100% - 1105px);
+				height: 2.9em;
 
-.marqueeContainer p,
-.marqueeContainer div
-{
-    width: max-content;
-}
+				margin-top: 2.1em;
+				float:right;
+				overflow: hidden;
+			}
 
-.marqueeContainer .content
-{
-    position: absolute;
-    height: 100%;
+			.marqueeContainer p,
+			.marqueeContainer div
+			{
+				width: max-content;
+			}
 
-    margin: 0;
+			.marqueeContainer .content
+			{
+				position: absolute;
+				height: 100%;
 
-    line-height: 50px;
-    text-align: center;
-    -moz-transform:translateX(100%);
-    -webkit-transform:translateX(100%);
-    transform:translateX(100%);
-    -moz-animation: marquee 15s linear infinite;
-    -webkit-animation: marquee 15s linear infinite;
-    animation: marquee 15s linear infinite;
-}
+				margin: 0;
 
-.marqueeContainer .content .entry
-{
-    display: inline-block;
-}
+				line-height: 50px;
+				-moz-transform:translateX(100%);
+				-webkit-transform:translateX(100%);
+				transform:translateX(100%);
+				-moz-animation: marquee 15s linear infinite;
+				-webkit-animation: marquee 15s linear infinite;
+				animation: marquee 15s linear infinite;
+			}
 
-.marqueeContainer .content .entry:first-child::before,
-.marqueeContainer .content .entry::after
-{
-    content: ' +++ ';
-    display: inline-block;
-}
+			.marqueeContainer .content .entry
+			{
+				display: inline-block;
+			}
 
-@-moz-keyframes marquee {
-0%   { -moz-transform: translateX(0%); }
-100% { -moz-transform: translateX(-100%); }
-}
+			.marqueeContainer .content .entry:first-child::before,
+			.marqueeContainer .content .entry::after
+			{
+				content: ' +++ ';
+				display: inline-block;
+			}
 
-@-webkit-keyframes marquee {
-0%   { -webkit-transform: translateX(0%); }
-100% { -webkit-transform: translateX(-100%); }
-}
+			@-moz-keyframes marquee {
+				0%   { left: 100%; -moz-transform: translateX(0%); }
+				100% { left:   0%; -moz-transform: translateX(-100%); }
+			}
 
-@keyframes marquee {
-0%   { 
--moz-transform: translateX(100%); /* Firefox bug fix */
--webkit-transform: translateX(100%); /* Firefox bug fix */
-transform: translateX(100%); 		
-}
-100% { 
--moz-transform: translateX(-100%); /* Firefox bug fix */
--webkit-transform: translateX(-100%); /* Firefox bug fix */
-transform: translateX(-100%); 
-}
-}
-</style>
-<?php
+			@-webkit-keyframes marquee {
+				0%   { left: 100%; -webkit-transform: translateX(0%); }
+				100% { left:   0%; -webkit-transform: translateX(-100%); }
+			}
+
+			@keyframes marquee {
+				0%   {
+					left: 100%;
+					-moz-transform: translateX(0%); /* Firefox bug fix */
+					-webkit-transform: translateX(0%); /* Firefox bug fix */
+					transform: translateX(0%);
+				}
+				100% {
+					left:   0%;
+					-moz-transform: translateX(-100%); /* Firefox bug fix */
+					-webkit-transform: translateX(-100%); /* Firefox bug fix */
+					transform: translateX(-100%);
+				}
+			}
+			</style>
+		<?php
 			$format = ob_get_contents();
-
-ob_start();
-?>
-<div class="marqueeContainer">
-    <div class="content">
-        %s
-    </div>
-</div>
-<?php
+			ob_end_clean();
+			ob_start();
+		?>
+			<div class="marqueeContainer">
+				<div class="content">
+					%s
+				</div>
+			</div>
+		<?php
 			$content = ob_get_contents();
+			ob_end_clean();
 
 			$template->data['headerTickerContent'] = $format . sprintf($content, $result->getResultData()["parse"]["text"]);
 			return true;
