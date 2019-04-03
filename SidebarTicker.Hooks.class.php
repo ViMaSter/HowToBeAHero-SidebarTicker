@@ -1,6 +1,6 @@
 <?php
 
-namespace HeaderTicker {
+namespace SidebarTicker {
 	class Hooks
 	{
 		// Borrowed from https://github.com/wikimedia/mediawiki-extensions-ParserFunctions/blob/cf1480cb9629514dd4400b1b83283ae6c83ff163/includes/ExtParserFunctions.php#L314
@@ -42,9 +42,9 @@ namespace HeaderTicker {
 			return false;
 		}
 
-		public static function onSkinTemplateOutputPageBeforeExec( &$skin, &$template )
+		public static function onSkinBuildSidebar( $skin, &$sidebar )
 		{
-			$tickerTitle = "HeaderTicker";
+			$tickerTitle = "SidebarTicker";
 			$title = \Title::newFromText( $tickerTitle );
 
 			if (!$title || !Hooks::pageExists($tickerTitle, $title))
@@ -76,11 +76,8 @@ namespace HeaderTicker {
 			{
 				position: relative;
 
-				width: calc(100% - 1105px);
-				height: 2.9em;
+				width: 100%;
 
-				margin-top: 2.1em;
-				float:right;
 				overflow: hidden;
 			}
 
@@ -92,12 +89,9 @@ namespace HeaderTicker {
 
 			.marqueeContainer .content
 			{
-				position: absolute;
-				height: 100%;
-
+				position: relative;
 				margin: 0;
 
-				line-height: 50px;
 				-moz-transform:translateX(100%);
 				-webkit-transform:translateX(100%);
 				transform:translateX(100%);
@@ -157,8 +151,9 @@ namespace HeaderTicker {
 			$content = ob_get_contents();
 			ob_end_clean();
 
-			$template->data['headerTickerContent'] = $format . sprintf($content, $result->getResultData()["parse"]["text"]);
+			$sidebar[ 'ticker' ] = $format . sprintf($content, $result->getResultData()["parse"]["text"]);
 			return true;
 		}
 	}
 }
+

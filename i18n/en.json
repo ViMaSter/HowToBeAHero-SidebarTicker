@@ -4,5 +4,5 @@
 			"Vincent Mahnke"
 		]
 	},
-	"headerticker-desc": "Adds a News-Ticker to the Header of each wiki-page."
+	"sidebarticker-desc": "Adds a news-ticker to the sidebar of each wiki-page."
 }

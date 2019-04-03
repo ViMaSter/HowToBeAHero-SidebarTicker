@@ -1,16 +1,16 @@
 {
-	"name": "Header Ticker",
-	"version": "0.1.1",
+	"name": "Sidebar Ticker",
+	"version": "0.1.2",
 	"author": [
 		"Vincent Mahnke"
 	],
-	"url": "https://github.com/ViMaSter/HowToBeAHero-HeaderTicker",
-	"descriptionmsg": "headerticker-desc",
+	"url": "https://github.com/ViMaSter/HowToBeAHero-SidebarTicker",
+	"descriptionmsg": "sidebarticker-desc",
 	"license-name": "GPL-3.0-or-later",
 	"type": "other",
 	"Hooks": {
-		"SkinTemplateOutputPageBeforeExec": [
-			"HeaderTicker\\Hooks::onSkinTemplateOutputPageBeforeExec"
+		"SkinBuildSidebar": [
+			"SidebarTicker\\Hooks::onSkinBuildSidebar"
 		]
 	},
 	"MessagesDirs": {
@@ -19,7 +19,7 @@
 		]
 	},
 	"AutoloadClasses": {
-		"HeaderTicker\\Hooks": "HeaderTicker.Hooks.class.php"
+		"SidebarTicker\\Hooks": "SidebarTicker.Hooks.class.php"
 	},
 	"manifest_version": 1
 }

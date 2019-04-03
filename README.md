@@ -1,6 +1,6 @@
-# Header Ticker
-Adds a content-ticker between the page's headers.
+# Sidebar ticker
+Adds a content-ticker between the page's sidebar.
 
 # Installation
-* Clone this repository into a folder called `HeaderTicket` inside your `/extensions`-folder of your MediaWiki root-folder
-* Add `wfLoadExtension( 'HeaderTicket' );` to the `/LocalSettings.php`-file
+* Clone this repository into a folder called `SidebarTicker` inside your `/extensions`-folder of your MediaWiki root-folder
+* Add `wfLoadExtension( 'SidebarTicker' );` to the `/LocalSettings.php`-file
