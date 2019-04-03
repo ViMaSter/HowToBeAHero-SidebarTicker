@@ -142,11 +142,7 @@ namespace SidebarTicker {
 			ob_end_clean();
 			ob_start();
 		?>
-			<div class="marqueeContainer">
-				<div class="content">
 					%s
-				</div>
-			</div>
 		<?php
 			$content = ob_get_contents();
 			ob_end_clean();
