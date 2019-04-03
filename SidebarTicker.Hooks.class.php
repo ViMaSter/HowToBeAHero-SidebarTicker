@@ -43,50 +43,44 @@ namespace SidebarTicker {
 		}
 
 		public static function onSkinBuildSidebar( $skin, &$sidebar )
-		{
-			$tickerTitle = "SidebarTicker";
-			$title = \Title::newFromText( $tickerTitle );
+                {
+                        $tickerTitle = "SidebarTicker";
+                        $title = \Title::newFromText( $tickerTitle );
 
-			if (!$title || !Hooks::pageExists($tickerTitle, $title))
-			{
-				return true;
-			}
+                        if (!$title || !Hooks::pageExists($tickerTitle, $title))
+                        {
+                                return true;
+                        }
+			            global $wgRequest;
+                        $apiRequest = new \DerivativeRequest(
+                                $wgRequest,
+                                array(
+                                        'action' => 'parse',
+                                        'page' => $tickerTitle
+                                )
+                        );
 
-			global $wgParser;
-			$backupParser = $wgParser;
-			$wgParser = new \Parser();
+                        $api = new \ApiMain( $apiRequest, true );
+                        $api->execute();
+                        $result = $api->getResult();
 
-			$apiRequest = new \FauxRequest( array(
-				'action' => 'parse',
-				'page' => $tickerTitle
-			) );
+                        ob_start();
+                ?>
+                        <style type="text/css">
+                        .marqueeContainer
+                        {
+                                position: relative;
 
-			$context = new \DerivativeContext( new \RequestContext() );
-			$context->setRequest( $apiRequest );
-			$api = new \ApiMain( $context, true );
-			$api->execute();
-			$result = $api->getResult();
+                                width: 100%;
 
-			$wgParser = $backupParser;
+                                overflow: hidden;
+                        }
 
-			ob_start();
-		?>
-			<style type="text/css">
-			.marqueeContainer
-			{
-				position: relative;
-
-				width: 100%;
-
-				overflow: hidden;
-			}
-
-			.marqueeContainer p,
-			.marqueeContainer div
-			{
-				width: max-content;
-			}
-
+                        .marqueeContainer p,
+                        .marqueeContainer div
+                        {
+                                width: max-content;
+                        }
 			.marqueeContainer .content
 			{
 				position: relative;
