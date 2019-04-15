@@ -43,44 +43,46 @@ namespace SidebarTicker {
 		}
 
 		public static function onSkinBuildSidebar( $skin, &$sidebar )
-                {
-                        $tickerTitle = "SidebarTicker";
-                        $title = \Title::newFromText( $tickerTitle );
+        {
+            $tickerTitle = "SidebarTicker";
+            $title = \Title::newFromText( $tickerTitle );
 
-                        if (!$title || !Hooks::pageExists($tickerTitle, $title))
-                        {
-                                return true;
-                        }
-			            global $wgRequest;
-                        $apiRequest = new \DerivativeRequest(
-                                $wgRequest,
-                                array(
-                                        'action' => 'parse',
-                                        'page' => $tickerTitle
-                                )
-                        );
+            if (!$title || !Hooks::pageExists($tickerTitle, $title))
+            {
+                    return true;
+            }
+            global $wgRequest;
+            $apiRequest = new \DerivativeRequest(
+                    $wgRequest,
+                    array(
+                            'action' => 'parse',
+                            'page' => $tickerTitle
+                    )
+            );
 
-                        $api = new \ApiMain( $apiRequest, true );
-                        $api->execute();
-                        $result = $api->getResult();
+            $api = new \ApiMain( $apiRequest, true );
+            $api->execute();
+            $result = $api->getResult();
 
-                        ob_start();
-                ?>
-                        <style type="text/css">
-                        .marqueeContainer
-                        {
-                                position: relative;
+            ob_start();
+        	?>
+            <style type="text/css">
+            .marqueeContainer
+            {
+                    position: relative;
 
-                                width: 100%;
+                    width: 100%;
 
-                                overflow: hidden;
-                        }
+                    overflow: hidden;
+            }
 
-                        .marqueeContainer p,
-                        .marqueeContainer div
-                        {
-                                width: max-content;
-                        }
+            .marqueeContainer p,
+            .marqueeContainer div
+            {
+            	width: intrinsic;           /* Safari/WebKit uses a non-standard name */
+				width: -moz-max-content;    /* Firefox/Gecko */
+				width: -webkit-max-content; /* Chrome */
+            }
 			.marqueeContainer .content
 			{
 				position: relative;
@@ -131,7 +133,7 @@ namespace SidebarTicker {
 				}
 			}
 			</style>
-		<?php
+			<?php
 			$format = ob_get_contents();
 			ob_end_clean();
 			ob_start();
