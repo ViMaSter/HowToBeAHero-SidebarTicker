@@ -47,6 +47,11 @@ namespace SidebarTicker {
             $tickerTitle = "SidebarTicker";
             $title = \Title::newFromText( $tickerTitle );
 
+            if (!$skin->getTitle()->isMainPage())
+            {
+                    return true;
+            }
+
             if (!$title || !Hooks::pageExists($tickerTitle, $title))
             {
                     return true;
