@@ -1,6 +1,9 @@
 <?php
 
+
+
 namespace SidebarTicker {
+	use MediaWiki\Context\RequestContext;
 	class Hooks
 	{
 		// Borrowed from https://github.com/wikimedia/mediawiki-extensions-ParserFunctions/blob/cf1480cb9629514dd4400b1b83283ae6c83ff163/includes/ExtParserFunctions.php#L314
@@ -44,13 +47,14 @@ namespace SidebarTicker {
 
 		public static function onSkinBuildSidebar( $skin, &$sidebar )
         {
-            $tickerTitle = "SidebarTicker";
+			$langcode = 'RequestContext'::getMain()->getLanguage()->getCode();
+            $tickerTitle = "SidebarTicker/".$langcode;
             $title = \Title::newFromText( $tickerTitle );
 
-            if (!$skin->getTitle()->isMainPage())
-            {
-                    return true;
-            }
+            #if (!$skin->getTitle()->isMainPage())
+            #{
+            #        return true;
+            #}
 
             if (!$title || !Hooks::pageExists($tickerTitle, $title))
             {
@@ -68,8 +72,10 @@ namespace SidebarTicker {
             $api = new \ApiMain( $apiRequest, true );
             $api->execute();
             $result = $api->getResult();
-
+			
             ob_start();
+			
+			
         	?>
             <style type="text/css">
             .marqueeContainer
@@ -142,11 +148,13 @@ namespace SidebarTicker {
 			$format = ob_get_contents();
 			ob_end_clean();
 			ob_start();
+			
 		?>
 					%s
 		<?php
 			$content = ob_get_contents();
 			ob_end_clean();
+
 
 			$sidebar[ 'ticker' ] = $format . sprintf($content, $result->getResultData()["parse"]["text"]);
 			return true;
