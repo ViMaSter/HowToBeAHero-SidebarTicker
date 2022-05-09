@@ -9,8 +9,7 @@ namespace SidebarTicker {
 		// Borrowed from https://github.com/wikimedia/mediawiki-extensions-ParserFunctions/blob/cf1480cb9629514dd4400b1b83283ae6c83ff163/includes/ExtParserFunctions.php#L314
 		public static function pageExists(string $titleText, \Title $title)
 		{
-			global $wgContLang;
-			$wgContLang->findVariantLink( $titletext, $title, true );
+			$this->getLanguageConverter()->findVariantLink( $titletext, $title, true );
 			if ( $title )
 			{
 				if ( $title->getNamespace() === NS_SPECIAL )
@@ -160,5 +159,17 @@ namespace SidebarTicker {
 			return true;
 		}
 	}
+
+	/**
+	 * @since 1.35
+	 * @return ILanguageConverter
+	 */
+	private function getLanguageConverter(): ILanguageConverter {
+		$services = MediaWikiServices::getInstance();
+		return $services
+			->getLanguageConverterFactory()
+			->getLanguageConverter( $services->getContentLanguage() );
+	}
+	
 }
 
